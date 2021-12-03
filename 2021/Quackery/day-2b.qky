@@ -1,0 +1,20 @@
+[ this ] is day-2b.qky
+
+( depth aim horizontal is state )
+
+[ 0 0 0 ]                  is <new-state> ( -- state )
+
+
+[ ]'[ dup dip [ + unrot ]
+  over dip [ * + ] rot ]   is override-forward ( state 'n -- state )
+[ dip
+  [ ' override-forward
+    nested join ] ]    builds forward ( [ $ -- [ $ )
+
+[ swap ]'[ - swap ]        is up ( state 'n -- state )
+
+[ swap ]'[ + swap ]        is down ( state 'n -- state )
+
+
+[ dip <new-state>
+  quackery nip * ]         is solve-puzzle ( input -- n )

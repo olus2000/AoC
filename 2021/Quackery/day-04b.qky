@@ -1,0 +1,98 @@
+( [ this ] is day-04b.qky )
+
+[ [] unrot
+  [] unrot
+  swap witheach
+  [ 2dup = iff
+    [ drop dip
+      [ nested join [] ] ]
+    done
+    swap dip
+    [ nested join ] ]
+  drop nested join ]                   is split-by ( [ x -- [ )
+
+[ nested
+  ' [ nested join ] join
+  makewith nested
+  ' [ [] swap ] swap join ]            is make-mapper ( action:( x -- x ): -- mapper )
+
+[ ]'[ make-mapper do ]                 is map ( [ 'action:( x -- x ): -- [ )
+
+[ nextword
+  char , split-by
+  map [ $->n drop ]
+  swap trim
+  carriage split-by
+  [] split-by
+  map [ map
+    [ nest$ map
+      [ $->n drop ] ] ] ]              is parse-input ( input -- boards ns )
+
+[ stack ]                              is mark.value ( -- [ )
+
+[ map [ map
+  [ mark.value share
+    over = if
+    [ drop -1 ] ] ] ]                  is mark-board ( board n -- board )
+
+[ peek
+  true swap
+  witheach
+  [ 0 < not if
+    [ drop false
+      conclude ] ] ]                   is check-row ( board n -- ? )
+
+[ true unrot
+  swap witheach
+  [ over peek
+    0 < not if
+    [ nip false swap
+      conclude ] ]
+  drop ]                               is check-column ( board -- ? ) ( mark.value: n -- n )
+
+[ false swap
+  5 times
+  [ dup i check-row
+    over i check-column
+    or if
+    [ nip true swap
+      conclude ] ]
+  drop ]                               is winner? ( board -- ? )
+
+[ [] swap
+  witheach
+  [ dup winner?
+    iff drop else
+    [ nested join ] ] ]                is filter-winners ( boards -- boards )
+
+[ mark.value put
+  map mark-board
+  mark.value release
+  filter-winners ]                     is step-elimination ( boards n -- boards )
+
+
+[ mark.value put
+  mark-board
+  mark.value release ]               is step-final ( board n -- board )
+
+[ [ dup size 1 > while
+    over take
+    step-elimination
+    again ]
+  share
+  [ over share
+    step-final
+    dup winner? not while
+    over release
+    again ]
+  swap share ]                         is run-game ( ns boards -- board n )
+
+[ 0 swap witheach
+  [ witheach
+    [ dup 0 < iff
+      drop else + ] ] ]                is sum-board ( board -- n )
+
+[ parse-input
+  dip reverse
+  run-game
+  swap sum-board * ]                   is solve-puzzle ( input -- n )

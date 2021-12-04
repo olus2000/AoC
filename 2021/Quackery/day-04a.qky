@@ -1,0 +1,83 @@
+[ this ] is day-04a.qky
+
+[ [] unrot
+  [] unrot
+  swap witheach
+  [ 2dup = iff
+    [ drop dip
+      [ nested join [] ] ]
+    done
+    swap dip
+    [ nested join ] ]
+  drop nested join ]                   is split-by ( [ x -- [ )
+
+[ nested
+  ' [ nested join ] join
+  makewith nested
+  ' [ [] swap ] swap join ]            is make-mapper ( action:( x -- x ): -- mapper )
+
+[ ]'[ make-mapper do ]                 is map ( [ 'action:( x -- x ): -- [ )
+
+[ nextword
+  char , split-by
+  map [ $->n drop ]
+  swap trim
+  carriage split-by
+  [] split-by
+  map [ map
+    [ nest$ map
+      [ $->n drop ] ] ]
+  swap ]                               is parse-input ( input -- boards ns )
+
+[ stack ]                              is mark.value ( -- [ )
+
+[ map [ map
+  [ mark.value share
+    over = if
+    [ drop -1 ] ] ] ]                  is mark-board ( board n -- board )
+
+[ peek
+  true swap
+  witheach
+  [ 0 < not if
+    [ drop false
+      conclude ] ] ]                   is check-row ( board n -- ? )
+
+[ true unrot
+  swap witheach
+  [ over peek
+    0 < not if
+    [ nip false swap
+      conclude ] ]
+  drop ]                               is check-column ( board -- ? ) ( mark.value: n -- n )
+
+[ false over
+  witheach
+  [ false swap
+    5 times
+    [ dup i check-row
+      over i check-column
+      or if
+      [ conclude
+        nip true swap ] ]
+    swap iff
+    [ nip nip true
+      conclude ]
+    else drop ] ]                      is find-winner ( boards -- board true | boards false )
+
+[ witheach
+  [ mark.value put
+    map mark-board
+    find-winner iff
+    [ mark.value take
+      conclude ] done
+    mark.value release ] ]             is run-game ( boards ns -- board n )
+
+[ 0 swap witheach
+  [ witheach
+    [ dup 0 < iff
+      drop else + ] ] ]                is sum-board ( board -- n )
+
+[ parse-input
+  run-game
+  swap sum-board * ]                   is solve-puzzle ( input -- n )

@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # [                              quackery                               ]
 
 import time
@@ -833,7 +832,6 @@ def quackery(source_string):
   [ protected take
     ]'[ nested join
     protected put ]             is protect      (         -->         )
-                           protect protected
 
   [ stack ]                     is dip.hold     (         --> s       )
   protect dip.hold
@@ -1136,16 +1134,11 @@ def quackery(source_string):
 
   [ stack ]                     is history      (         --> s       )
 
-  [ protected share history put
-    protected share 0
-    [ over size over
-      > while
-      2dup peek
-      size unrot
-      1+ again ]
-    2drop
-    protected share size pack
-    history put
+  [ protected share
+    [ dup [] != while
+      -1 split 0 peek
+      size history put again ]
+    drop
     pack dup history put unpack
     stacksize history put
     nestdepth history put
@@ -1163,26 +1156,21 @@ def quackery(source_string):
         history share
         size - - times drop
         history take unpack
-        history take unpack
-        history share size
-        [ dup 0 > while
-          1 -
-          history share
-          over peek
-          rot over size
-          swap -
+        protected share
+        reverse
+        [ dup [] != while
+          -1 split 0 peek
+          dup size
+          history take -
           [ dup 0 > while
             over release
             1 - again ]
           2drop again ]
-        drop
-        history take
-        protected release
-        protected put
-        true ]
+        drop true ]
       else
-        [ 5 times
-          [ history release ]
+        [ protected share
+          size 3 + times
+            [ history release ]
           false ] ]             is bailed       (         --> b       )
 
   [ quid swap quid = ]          is oats         (     x x --> b       )
@@ -1397,45 +1385,36 @@ def quackery(source_string):
   [ 4 times
     [ history release ] ]       is releasewords (         -->         )
 
-  [ stack [ ( pred: '( $ --> ? )' action: '( [ $ $ --> [ $ )' )
-    [ [ drop true ]
-      [ $ "Unknown word: "
-        swap join message put
-        bail ] ]
-    [ [ $->n nip ]
-      [ $->n drop
-        swap dip join ] ]
-    [ [ name? ]
-      [ names find
-        actions nested
-        swap dip join ] ]
-    [ [ builder? ]
-      [ dip trim
-        builders find
-        jobs do ] ] ] ]         is wordtypes    (         --> [       )
-                           protect wordtypes
-
   [ backupwords
     b.to-do new-do
     1 backup
-      [ [] b.nesting put
+      [ $ '' b.nesting put
         decimal
         [] swap
         [ trim
           dup $ '' = iff drop done
           nextword
-          wordtypes share size times
-          [ wordtypes share i peek
-            2dup 0 peek do iff
-              [ conclude
-                1 peek do ]
-            else drop ]
-          again ]
+          dup builders find
+          dup builders found iff
+            [ dip [ drop trim ]
+              jobs do ] again
+          drop
+          dup names find
+          dup names found iff
+            [ actions nested
+              nip swap dip join ] again
+          drop
+          dup $->n iff
+            [ nip swap dip join ] again
+          drop
+          $ 'Unknown word: '
+          swap join message put
+          bail ]
         base release
         b.nesting take dup
         $ '' = iff drop
         else
-          [ $ "Unfinished nest: "
+          [ $ 'Unfinished nest: '
             swap join message put
             bail ] ]
     bailed iff
@@ -1527,11 +1506,7 @@ def quackery(source_string):
       carriage join join
       $ '... ' again ]
     drop
-    0 backup
     quackery
-    bailed if
-    [ message size 1 > if
-      [ message share echo$ ] ]
     5 nesting put
     cr echostack
     nesting release again ]     is shell        (         -->         )
@@ -1603,8 +1578,7 @@ def quackery(source_string):
      quid operator? number? nest? size poke peek find join split []
      take immovable put ]bailby[ ]do[ ]this[ ]'[ ]else[ ]iff[ ]if[
      ]again[ ]done[ over rot swap drop dup return nestdepth stacksize
-     time ~ ^ | & >> << ** /mod * negate + 1+ > = nand fail python
-     wordtypes"
+     time ~ ^ | & >> << ** /mod * negate + 1+ > = nand fail python"
   nest$ namenest put
 
   [ table
@@ -1629,8 +1603,7 @@ def quackery(source_string):
     quid operator? number? nest? size poke peek find join split []
     take immovable put ]bailby[ ]do[ ]this[ ]'[ ]else[ ]iff[ ]if[
     ]again[ ]done[ over rot swap drop dup return nestdepth stacksize
-    time ~ ^ | & >> << ** /mod * negate + 1+ > = nand fail python
-    wordtypes ]
+    time ~ ^ | & >> << ** /mod * negate + 1+ > = nand fail python ]
 
                           resolves actions      (       n --> x       )
 

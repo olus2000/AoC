@@ -1,0 +1,75 @@
+[ nextword
+  char , split-by
+  map [ $->n drop ]
+  nested swap
+  4 split nip
+  char , split-by
+  map [ $->n drop ]
+  nested join ]                 is parse-line ( $ -- line )
+
+[ carriage split-by
+  map parse-line ]              is parse-input ( input -- lines )
+
+[ 0 over of
+  [] rot times
+  [ over copy
+    nested join ]
+  nip ]                         is <board> ( size -- board )
+
+[ 0 peek ]                      is first ( line -- point )
+
+[ 1 peek ]                      is second ( line -- point )
+
+                          first is x ( point -- n )
+
+                         second is y ( point -- n )
+
+[ dup first y
+  swap second y = ]             is horizontal? ( line -- ? )
+
+[ dup first x
+  swap second x = ]             is vertical? ( line -- ? )
+
+[ 2dup > if swap
+  1+ times
+  [ i^ not if [ 1+ step ]
+    dup i^ peek
+    1+ swap
+    i^ poke ] ]                 is draw-row ( row x1 x2 -- row )
+
+[ 2dup first y peek
+  over dup first x
+  swap second x
+  draw-row
+  unrot first y poke ]          is draw-horizontal ( board line -- board )
+
+[ dup first x
+  temp put
+  dup first y
+  swap second y
+  2dup > if swap
+  1+ times
+  [ i^ not if [ 1+ step ]
+    dup i^ peek
+    dup temp share peek
+    1+ swap
+    temp share poke
+    swap i^ poke ]
+  temp release ]                is draw-vertical ( board line -- board )
+
+
+[ witheach
+  [ dup horizontal? iff
+    draw-horizontal done
+    dup vertical? iff
+    draw-vertical done
+    drop ] ]                    is draw-lines ( board lines -- board )
+
+[ 0 swap witheach
+  [ witheach
+    [ 1 > + ] ] ]               is count-board ( board -- n )
+
+[ parse-input
+  1000 <board>
+  swap draw-lines
+  count-board ]                 is solve-puzzle ( input -- n )

@@ -1,0 +1,25 @@
+[ char , split-by
+  map [ $->n drop ]
+  0 9 of swap
+  witheach
+  [ 2dup peek
+    1+ unrot poke ] ]          is parse-input ( input -- fish )
+
+[ [] 8 times
+  [ over i^ 1+ peek
+    i^ 6 = if
+    [ dip
+      [ over 0 peek ]
+      + ]
+    join ]
+  swap 0 peek join ]           is step ( fish -- fish )
+
+[ 0 swap witheach + ] is count-fish ( fish -- n )
+
+[ dip parse-input
+  times step
+  count-fish ]                 is solve-puzzle-n ( input n -- n )
+
+[ 80 solve-puzzle-n ]          is solve-puzzle-A ( input -- n )
+
+[ 256 solve-puzzle-n ]         is solve-puzzle-B ( input -- n )

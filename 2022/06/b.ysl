@@ -1,0 +1,56 @@
+input
+var input c return
+var set = 0
+set_size set 26
+var bads = 0
+
+
+var i = 0
+init-loop:
+    gosub *parse
+    lt $i 14
+    goto_if *init-loop
+
+
+var j = 0
+main:
+    cmp $bads 0
+    goto_if *exit
+    gosub *parse
+    gosub *drop
+    goto *main
+
+
+exit:
+    println $i
+    exit
+
+
+parse:
+    var c f input $i
+    var c - &a
+    var n f set $c
+    cmp $n 1
+    goto_if *parse-bad
+    var bads - 1
+parse-bad:
+    var bads + 1
+    var n + 1
+    var set s $c $n
+    var i + 1
+    return
+
+
+drop:
+    var c f input $j
+    var c - &a
+    var n f set $c
+    cmp $n 2
+    goto_if *drop-bad
+    var bads + 1
+drop-bad:
+    var bads - 1
+    var n - 1
+    var set s $c $n
+    var j + 1
+    return

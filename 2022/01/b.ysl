@@ -1,0 +1,52 @@
+var best1 = 0
+var best2 = 0
+var best3 = 0
+
+
+main:
+    gosub *read_num
+    cmp $j 0
+    goto_if *exit
+    var sum = $i
+sum_loop:
+    gosub *read_num
+    cmp $j 0
+    goto_if *summarize
+    var sum + $i
+    goto *sum_loop
+summarize:
+    lt $sum $best1
+    goto_if *no_best1
+    swap best1 sum
+no_best1:
+    lt $sum $best2
+    goto_if *no_best2
+    swap best2 sum
+no_best2:
+    lt $sum $best3
+    goto_if *main
+    swap best3 sum
+    goto *main
+exit:
+    var best1 + $best2
+    var best1 + $best3
+    println $best1
+    exit
+
+
+read_num:
+    var j = 0
+    var i = 0
+read_num_loop:
+    getch
+    var a f return
+    gt 33 $a
+    goto_if *read_num_end
+    var j = 1
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read_num_loop
+read_num_end:
+    return $i
+

@@ -1,0 +1,108 @@
+string_array n ""
+var forest c return
+string_array n ""
+var visibility c return
+
+var score = 0
+
+
+input-loop::
+    getch
+    var c f return
+    lt $c &0
+    goto_if *main
+    var row = &0
+    var vis-row = &0
+row-loop::
+    var row a $c
+    var vis-row a &0
+    getch
+    var c f return
+    gt $c 10
+    goto_if *row-loop
+    string_array a forest !row
+    string_array a visibility !vis-row
+    goto *input-loop
+
+
+main::
+    string_array l forest
+    var forest-size f return
+    var i = 0
+    var x = 1
+first-loop::
+    var y = 1
+    var h = 0
+first-loop-loop::
+    gosub *get
+    gt $tree $h
+    gosub_if *mark-visible
+    var y + 1
+    lt $y $forest-size
+    goto_if *first-loop-loop
+    var x + 1
+    lt $x $forest-size
+    goto_if *first-loop
+    var x = 1
+second-loop::
+    var y = $forest-size
+    var h = 0
+second-loop-loop::
+    var y - 1
+    gosub *get
+    gt $tree $h
+    gosub_if *mark-visible
+    gt $y 1
+    goto_if *second-loop-loop
+    var x + 1
+    lt $x $forest-size
+    goto_if *second-loop
+    var y = 1
+third-loop::
+    var x = 1
+    var h = 0
+third-loop-loop::
+    gosub *get
+    gt $tree $h
+    gosub_if *mark-visible
+    var x + 1
+    lt $x $forest-size
+    goto_if *third-loop-loop
+    var y + 1
+    lt $y $forest-size
+    goto_if *third-loop
+    var y = 1
+fourt-loop::
+    var x = $forest-size
+    var h = 0
+fourt-loop-loop::
+    var x - 1
+    gosub *get
+    gt $tree $h
+    gosub_if *mark-visible
+    gt $x 1
+    goto_if *fourt-loop-loop
+    var y + 1
+    lt $y $forest-size
+    goto_if *fourt-loop
+    println $score
+    exit
+
+
+get::
+    string_array g forest $x
+    var row c return
+    var tree f row $y
+    return $tree
+
+
+mark-visible::
+    var h = $tree
+    string_array g visibility $x
+    var row c return
+    var i f row $y
+    var score - $i
+    var score + &1
+    var row s $y &1
+    string_array s visibility $x !row
+    return

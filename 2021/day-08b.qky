@@ -1,0 +1,94 @@
+[ carriage split-by
+  map
+  [ char | split-by
+    unpack dip
+    [ nest$ map sort ]
+    nest$ map sort
+    2 pack ] ]              is parse-input ( input -- sets )
+
+[ true unrot
+  witheach
+  [ over find
+    over found
+    not if
+    [ nip false swap
+      conclude ] ]
+  drop  ]                   is in? ( set1 set2 -- ? )
+
+[ dip swap
+  swap dup size times
+  [ 2dup i^ peek
+    size = if
+    [ nip dip
+      [ over 1 peek put ]
+      i^ pluck swap dip
+      [ over 2 peek put ]
+      conclude ] ] ]        is find-obvious ( lut candidates target len -- lut candidates )
+
+[ swap dip
+  [ 2dup 1 peek
+    swap do drop
+    swap 1 poke ]
+  dup size times
+  [ 2dup i^ peek size
+    swap 2 peek = if
+    [ 2dup i^ peek
+      swap 1 peek in? if
+      [ dip
+        [ 0 peek over
+          1 peek put ]
+        i^ pluck swap dip
+        [ over 2 peek put ]
+        conclude ] ] ] ]    is find-including ( lut candidates [ target including len ] -- lut candidates )
+
+[ dip
+  [ 9 over do drop ]
+  dup size times
+  [ dup i^ peek
+    size 5 = if
+    [ 2dup i^ peek
+      in? if
+      [ nip i^ pluck
+        swap dip
+        [ over 2 peek put
+          5 over 1 peek put ]
+        conclude ] ] ] ]    is find-5 ( lut candidates -- lut candidates )
+
+[ unpack swap
+  <lut> swap
+  1 2 find-obvious
+  4 4 find-obvious
+  7 3 find-obvious
+  8 7 find-obvious
+  ' [ 3 1 5 ] find-including
+  ' [ 9 3 6 ] find-including
+  find-5
+  2 5 find-obvious
+  ' [ 6 5 6 ] find-including
+  0 6 find-obvious
+  drop lut.swap nested
+  ' [ drop ] join
+  make-mapper do
+  0 swap witheach
+  [ swap 10 * + ] ]         is deduce-number ( set -- n )
+
+[ parse-input
+  0 swap witheach
+  [ deduce-number + ] ]     is solve-puzzle ( input -- n )
+
+
+(
+
+[ env [ lut ] ... ]
+
+0 - abcefg
+1 - cf
+2 - acdeg
+3 - acdfg
+4 - bcde
+5 - abdfg
+6 - abdefg
+7 - acf
+8 - abcdefg
+
+)

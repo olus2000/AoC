@@ -1,0 +1,79 @@
+var score = 0
+var stack = 0
+var sp = 0
+var tos = 0
+
+
+next::
+    input
+    gosub *read-num
+    cmp $a &d
+    goto_if *next
+    cmp $a 32
+    goto_if *increment
+    cmp $a &$
+    goto_if *command
+end::
+    gosub *exit
+    gt $sp 0
+    goto_if *end
+    println $score
+    exit
+
+
+increment::
+    var tos + $i
+    goto *next
+
+
+command::
+    getch
+    getch
+    var i f return
+    cmp $i &l
+    goto_if *next
+    getch
+    getch
+    getch
+    var i f return
+    cmp $i &.
+    goto_if *cd-..
+    var stack a $tos
+    var tos = 0
+    var sp + 1
+    goto *next
+
+cd-..::
+    gosub *exit
+    goto *next
+
+
+exit::
+    gt $tos 100000
+    goto_if *no-increment-score
+    var score + $tos
+no-increment-score::
+    var i f stack $sp
+    var tos + $i
+    var stack r $sp 1
+    var sp - 1
+    return
+
+
+read-num::
+    var j = 0
+    var i = 0
+read-num-loop::
+    getch
+    var a f return
+    lt $a &0
+    goto_if *read-num-end
+    gt $a &9
+    goto_if *read-num-end
+    var j = 1
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read-num-loop
+read-num-end::
+    return $i

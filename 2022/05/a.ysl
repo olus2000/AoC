@@ -1,0 +1,134 @@
+string_array n "a" "a" "a" "a" "a" "a" "a" "a" "a"
+var stacks c return
+var empty = 0
+var empty r 0 1
+
+
+var counter = 0
+read-stacks:
+    getch
+    var in f return
+    cmp $in 10
+    goto_if *main
+    getch
+    var in f return
+    cmp $in 32
+    goto_if *read-stacks-end
+    string_array g stacks $counter
+    var stack c return
+    var stack-copy-counter = 0
+    size stack
+    var stack-size f return
+read-stack-copy:
+    cmp $stack-copy-counter $stack-size
+    goto_if *read-stack-copied
+    var i f stack $stack-copy-counter
+    var in a $i
+    var stack-copy-counter + 1
+    goto *read-stack-copy
+read-stack-copied:
+    string_array s stacks $counter !in
+read-stacks-end:
+    var counter + 1
+    var counter % 9
+    getch
+    getch
+    goto *read-stacks
+
+
+main:
+    var counter = 0
+empty-stacks:
+    string_array g stacks $counter
+    var stack c return
+    size stack
+    var stack-size f return
+    var stack-size - 1
+    var stack r $stack-size 1
+    string_array s stacks $counter !stack
+    var counter + 1
+    lt $counter 9
+    goto_if *empty-stacks
+
+
+main-loop:
+    getch
+    var in f return
+    lt $in &m
+    goto_if *exit
+    getch
+    getch
+    getch
+    getch
+    gosub *read-num
+    var move = $i
+    getch
+    getch
+    getch
+    getch
+    getch
+    gosub *read-num
+    var from = $i
+    var from - 1
+    getch
+    getch
+    getch
+    gosub *read-num
+    var to = $i
+    var to - 1
+    string_array g stacks $from
+    var from-stack c return
+    string_array g stacks $to
+    var to-stack c return
+    size from-stack
+    var from-stack-size f return
+move:
+    var from-stack-size - 1
+    var i f from-stack $from-stack-size
+    var to-stack a $i
+    var from-stack r $from-stack-size 1
+    var move - 1
+    gt $move 0
+    goto_if *move
+    string_array s stacks $from !from-stack
+    string_array s stacks $to !to-stack
+    goto *main-loop
+exit:
+    gosub *print-stacks
+    exit
+
+
+print-stacks:
+    var counter = 0
+print-loop:
+    string_array g stacks $counter
+    var stack c return
+    size stack
+    var stack-size f return
+    var stack-size - 1
+    var i f stack $stack-size
+    putch $i
+    var counter + 1
+    lt $counter 9
+    goto_if *print-loop
+    putch 10
+    return
+
+
+read-num:
+    var j = 0
+    var i = 0
+read-num-loop:
+    getch
+    var a f return
+    lt $a &0
+    goto_if *read-num-end
+    gt $a &9
+    goto_if *read-num-end
+    var j = 1
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read-num-loop
+read-num-end:
+    return $i

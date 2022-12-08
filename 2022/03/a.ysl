@@ -1,0 +1,54 @@
+var score = 0
+var set = 0
+set_size set 53
+# 58
+
+
+main:
+    input
+    var inp c return
+    size inp
+    var l f return
+    lt $l 2
+    goto_if *exit
+    var h = $l
+    var h / 2
+
+make_set:
+    cmp $h $l
+    goto_if *check_set
+    var l - 1
+    gosub *parse_type
+    var set s $i 1
+    goto *make_set
+
+check_set:
+    var l - 1
+    gosub *parse_type
+    var j f set $i
+    cmp $j 0
+    goto_if *check_set
+
+    var score + $i
+    var l = 1
+reset_set:
+    var set s $l 0
+    var l + 1
+    lt $l 53
+    goto_if *reset_set
+    goto *main
+
+exit:
+    println $score
+    exit
+
+
+parse_type:
+    var i f inp $l
+    gt $i &Z
+    goto_if *not_big
+    var i + 58
+not_big:
+    var i - &`
+    return
+    

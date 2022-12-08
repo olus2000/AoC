@@ -1,0 +1,43 @@
+var score = 0
+
+
+main:
+    gosub *read-num
+    cmp $j 0
+    goto_if *exit
+    var e = $i
+    gosub *read-num
+    var b = $i
+    gosub *read-num
+    var c = $i
+    gosub *read-num
+    var d = $i
+    gt $e $d
+    goto_if *main
+    lt $b $c
+    goto_if *main
+    var score + 1
+    goto *main
+exit:
+    println $score
+    exit
+
+
+read-num:
+    var j = 0
+    var i = 0
+read-num-loop:
+    getch
+    var a f return
+    lt $a &0
+    goto_if *read-num-end
+    gt $a &9
+    goto_if *read-num-end
+    var j = 1
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read-num-loop
+read-num-end:
+    return $i
+

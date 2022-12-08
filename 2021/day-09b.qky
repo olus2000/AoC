@@ -1,0 +1,63 @@
+[ nest$ map
+  [ map [ char 0 - ]
+    10 join ]
+  10 over
+  0 peek size
+  of nested join ]              is parse-input ( input -- cave )
+
+[ stack ]                       is cave.map
+
+[ cave.map share
+  swap peek
+  swap peek ]                   is cave.get ( x y -- n ) ( cave.map: cave -- cave )
+
+[ dup dip
+  [ cave.map share
+    swap peek
+    swap poke
+    cave.map take ]
+  poke
+  cave.map put ]                is cave.set ( n x y -- ) ( cave.map: cave -- cave )
+
+[ witheach
+  [ witheach
+    [ dup 10 = iff
+      [ drop say 'X' ]
+      else echo ]
+    cr ] ]                      is echo-cave ( cave -- )
+
+[ 2dup cave.get
+  8 > iff
+  [ 2drop 0 ] done
+  2dup 9 unrot cave.set
+  over 1 - over recurse unrot
+  over 1+  over recurse unrot
+  2dup 1 - recurse unrot
+  1+  recurse
+  + + + 1+ ]                    is basin-size ( x y -- n ) ( cave.map: cave1 -- cave2 )
+
+[ [] swap
+  cave.map share
+  over peek
+  size 1 - times
+  [ i^ over basin-size
+    dup iff
+    [ rot join swap ]
+    else drop ]
+  drop ]                        is find-in-row ( y -- basins ) ( cave.map: cave1 -- cave2 )
+
+[ dup cave.map put
+  [] swap
+  size 1 - times
+  [ i^ find-in-row
+    join ]
+  cave.map release ]            is find-basins ( cave -- basins )
+
+[ sort
+  dup take
+  over take *
+  swap take * ]                 is calc-score ( basins -- n )
+
+[ parse-input
+  find-basins
+  calc-score ]                  is solve-puzzle ( input -- n )

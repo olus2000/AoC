@@ -1,0 +1,39 @@
+[ nest$ map
+  [ map [ char 0 - ]
+    10 join ]
+  10 over
+  0 peek size
+  of nested join ]              is parse-input ( input -- cave )
+
+[ stack ]                       is cave.map
+
+[ cave.map share
+  swap peek
+  swap peek ]                   is cave.get ( x y -- n ) ( cave.map: cave -- cave )
+
+[ over 1+  over cave.get unrot
+  over 1 - over cave.get unrot
+  2dup 1+  cave.get unrot
+  2dup 1 - cave.get unrot
+  cave.get 1 4 times
+  [ dip [ swap over > ]
+    and ]
+  swap 1+ * ]                   is low? ( x y -- n ) ( cave.map: cave -- cave )
+
+( x 1 )
+
+[ 0 swap
+  cave.map share
+  0 peek size 1 - times
+  [ i^ over low?
+    rot + swap ]
+  drop ]                        is count-row ( y -- n ) ( cave.map: cave -- cave )
+
+[ 0 swap
+  dup cave.map put
+  size 1 - times
+  [ i^ count-row + ]
+  cave.map release ]            is count-lows ( cave -- n )
+
+[ parse-input
+  count-lows ]                  is solve-puzzle ( input -- n )

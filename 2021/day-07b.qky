@@ -1,0 +1,51 @@
+[ char , split-by
+  map [ $->n drop ] ]       is parse-input ( input -- positions )
+
+[ dup 0 peek swap
+  ]'[ swap
+  witheach
+  [ swap dip 2dup
+    dup dip
+    [ do if swap ]
+    nip ]
+  drop ]                    is pick-with ( ns 'pred -- n )
+
+[ pick-with < ]             is max ( ns -- n )
+
+[ pick-with > ]             is min ( ns -- n )
+
+[ stack ]                   is search.ns ( -- [ )
+
+[ dup 0 < if [ -1 * ] ]     is abs ( n -- |n| )
+
+[ dup 1+ * 2 / ]            is triangle ( n -- n )
+
+[ 0 swap
+  search.ns share
+  witheach
+  [ over - abs triangle
+    rot + swap ]
+  drop ]                    is distance ( n -- n ) ( search.ns: ns -- ns )
+
+[ 2dup - 3 /
+  2dup +
+  swap over +
+  over distance
+  over distance > iff
+  [ drop nip ] else
+  [ nip unrot nip ] ]       is optimise ( end start -- end start ) ( search.ns: ns -- ns )
+
+[ search.ns put
+  [ optimise
+    2dup - 3 < until ]
+  nip
+  dup 1+ dup 1+
+  3 pack
+  map distance
+  min
+  search.ns release ]       is ternary-search ( max min ns -- n )
+
+[ parse-input
+  dup max over min
+  rot ternary-search ]      is solve-puzzle ( input -- n )
+  

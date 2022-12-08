@@ -1,0 +1,98 @@
+string_array n ""
+var forest c return
+
+var score = 0
+
+
+input-loop::
+    getch
+    var c f return
+    lt $c &0
+    goto_if *main
+    var row = &0
+row-loop::
+    var row a $c
+    getch
+    var c f return
+    gt $c 10
+    goto_if *row-loop
+    string_array a forest !row
+    goto *input-loop
+
+
+main::
+    string_array l forest
+    var forest-size f return
+    var oy = 1
+y-loop::
+    var ox = 1
+x-loop::
+    var x = $ox
+    var y = $oy
+    gosub *get
+    var h = $tree
+    var a = 0
+a-loop::
+    var x - 1
+    cmp $x 0
+    goto_if *a-loop-end
+    var a + 1
+    gosub *get
+    lt $tree $h
+    goto_if *a-loop
+a-loop-end::
+    var x = $ox
+    var b = 0
+b-loop::
+    var x + 1
+    cmp $x $forest-size
+    goto_if *b-loop-end
+    var b + 1
+    gosub *get
+    lt $tree $h
+    goto_if *b-loop
+b-loop-end::
+    var x = $ox
+    var c = 0
+c-loop::
+    var y - 1
+    cmp $y 0
+    goto_if *c-loop-end
+    var c + 1
+    gosub *get
+    lt $tree $h
+    goto_if *c-loop
+c-loop-end::
+    var y = $oy
+    var d = 0
+d-loop::
+    var y + 1
+    cmp $y $forest-size
+    goto_if *d-loop-end
+    var d + 1
+    gosub *get
+    lt $tree $h
+    goto_if *d-loop
+d-loop-end::
+    var a * $b
+    var a * $c
+    var a * $d
+    lt $a $score
+    goto_if *no-update-score
+    var score = $a
+no-update-score::
+    var ox + 1
+    lt $ox $forest-size
+    goto_if *x-loop
+    var oy + 1
+    lt $oy $forest-size
+    goto_if *y-loop
+    println $score
+    exit
+
+
+get::
+    string_array g forest $x
+    var row c return
+    var tree f row $y
+    return $tree

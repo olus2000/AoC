@@ -1,0 +1,68 @@
+var score = 0
+var set = 0
+set_size set 53
+# 58
+
+
+main:
+    gosub *load_line
+    lt $l 2
+    goto_if *exit
+
+make_set:
+    cmp 0 $l
+    goto_if *add_set
+    gosub *parse_type
+    var set s $i 1
+    goto *make_set
+
+add_set:
+    gosub *load_line
+add_set_loop:
+    cmp 0 $l
+    goto_if *check_set
+    gosub *parse_type
+    lt $j 1
+    goto_if *add_set_loop
+    var set s $i 2
+    goto *add_set_loop
+
+check_set:
+    gosub *load_line
+check_set_loop:
+    gosub *parse_type
+    lt $j 2
+    goto_if *check_set_loop
+
+    var score + $i
+    var l = 1
+reset_set:
+    var set s $l 0
+    var l + 1
+    lt $l 53
+    goto_if *reset_set
+    goto *main
+
+exit:
+    println $score
+    exit
+
+
+load_line:
+    input
+    var inp c return
+    size inp
+    var l f return
+    return
+
+parse_type:
+    var l - 1
+    var i f inp $l
+    gt $i &Z
+    goto_if *not_big
+    var i + 58
+not_big:
+    var i - &`
+    var j f set $i
+    return
+    

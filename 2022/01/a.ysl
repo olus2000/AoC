@@ -1,0 +1,40 @@
+var best = 0
+
+
+main:
+    gosub *read-num
+    cmp $j 0
+    goto-if *exit
+    var sum = $i
+sum-loop:
+    gosub *read-num
+    cmp $j 0
+    goto-if *summarize
+    var sum + $i
+    goto *sum-loop
+summarize:
+    lt $sum $best
+    goto-if *main
+    var best = $sum
+    goto *main
+exit:
+    println $best
+    exit
+
+
+read-num:
+    var j = 0
+    var i = 0
+read-num-loop:
+    getch
+    var a f return
+    gt 33 $a
+    goto-if *read-num-end
+    var j = 1
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read-num-loop
+read-num-end:
+    return $i
+

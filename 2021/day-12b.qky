@@ -1,0 +1,67 @@
+[ temp put
+  dup $ 'start' =
+  iff 2drop else
+  [ swap temp share
+    do iff put else
+    [ temp share
+      1 peek put
+      nested
+      temp share
+      2 peek put ] ]
+  temp take ]                   is add-cave ( $ $ lut -- lut )
+
+[ char - split-by
+  unpack rot dip
+  [ 2dup swap ]
+  add-cave add-cave ]           is add-connection ( lut $ -- lut )
+
+[ nest$ <lut> swap
+  witheach add-connection ]     is parse-input ( input -- caves )
+
+( state: [ caves visited [doubled?] ] )
+[ nested [] nested
+  join ' [ false ]
+  nested join  ]                is <state> ( caves -- state )
+
+[ stack ]                       is search.state ( -- [ )
+
+[ 0 peek char Z > ]             is small? ( $ -- ? )
+
+[ search.state share
+  1 peek swap
+  over find swap found ]        is visited? ( $ -- ? ) ( search.state: state -- state )
+
+[ search.state share
+  2 peek share ]                is doubled? ( -- ? ) ( search.sate: state -- state )
+
+[ search.state share
+  2 peek dup release put ]      is set-doubled ( ? -- ) ( search.sate: state -- state )
+
+                        forward is count-paths
+
+[ dup $ 'end' = iff
+  [ drop 1 ] done
+  dup visited?
+  doubled? and iff
+  [ drop 0 ] done
+  false swap
+  dup visited? if
+  [ nip true swap
+    true set-doubled ]
+  dup small? if
+  [ dup search.state
+    share 1 peek put ]
+  dup search.state share
+  0 peek do drop
+  0 swap witheach
+  [ count-paths + ]
+  swap small? if
+  [ search.state share
+    1 peek release ]
+  swap if
+  [ false set-doubled ] ] resolves count-paths ( current -- n ) ( search.state: state -- state )
+
+[ parse-input
+  <state> search.state put
+  $ 'start' count-paths
+  search.state release ]        is solve-puzzle ( input -- n )

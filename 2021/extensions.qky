@@ -1,0 +1,40 @@
+[ this ] is extensions.qky
+
+[ $ 'merge-sort.qky' loadfile ] now!
+
+( --- split --- )
+
+[ [] unrot
+  [] unrot
+  swap witheach
+  [ 2dup = iff
+    [ drop dip
+      [ nested join [] ] ]
+    done
+    swap dip
+    [ nested join ] ]
+  drop nested join ]                   is split-by ( [ x -- [ )
+
+( --- mapping --- )
+
+[ nested
+  ' [ nested join ] join
+  makewith nested
+  ' [ [] swap ] swap join ]            is make-mapper ( action:( x -- x ): -- mapper )
+
+[ ]'[ make-mapper do ]                 is map ( [ 'action:( x -- x ): -- [ )
+
+( --- lookup tables --- )
+
+[ ]'[ ]'[ unrot
+  2dup find dup
+  rot found iff
+  [ nip peek true ] else
+  [ drop nip false ]
+  ]done[ ]                  is lut ( key -- val true | key false )
+
+[ ' [ lut ]
+  [] nested join
+  [] nested join ]          is <lut> ( -- lut )
+
+[ 1 pluck over put ]        is lut.swap ( lut -- lut )

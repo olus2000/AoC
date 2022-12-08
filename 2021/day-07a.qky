@@ -1,0 +1,16 @@
+[ char , split-by
+  map [ $->n drop ] ]      is parse-input ( input -- positions )
+
+[ sort dup size 2 / peek ] is median ( positions -- n )
+
+[ dup 0 < if [ -1 * ] ]    is abs ( n -- |n| )
+
+[ swap 0 unrot
+  witheach
+  [ over - abs
+    rot + swap ]
+  drop ]                   is distance ( positions n -- n )
+
+[ parse-input
+  dup median
+  distance ]               is solve-puzzle ( input -- n )

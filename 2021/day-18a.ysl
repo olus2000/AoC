@@ -1,0 +1,37 @@
+var -1 = 0
+var -1 - 1
+
+var value = 0
+set_size value 32
+var depth = 0
+set_size depth 32
+var next = 0
+set_size next 32
+var prev = 0
+set_size prev 32
+var alloc = 0
+set_size alloc 32
+
+
+var start = $0
+var end = $0
+
+
+
+
+
+read-num:
+    var i = 0
+read-num-loop:
+    getch
+    var a f return
+    lt $a 48
+    goto_if *read-num-return
+    gt $a 57
+    goto_if *read-num-return
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read-num-loop
+read-num-return:
+    return $i

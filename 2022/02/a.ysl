@@ -1,0 +1,27 @@
+var score = 0
+
+
+main:
+    getch
+    var i f return
+    lt $i 0
+    goto_if *exit
+    getch
+    getch
+    var j f return
+    var i - $j
+    var i + 1
+    var i % 3
+    var i * 3
+    var score - $i
+    var j - 1
+    var j % 3
+    var score + $j
+    var score + 1
+    getch
+    var i f return
+    cmp 10 $i
+    goto *main
+exit:
+    println $score
+    exit

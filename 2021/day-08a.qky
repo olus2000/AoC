@@ -1,0 +1,16 @@
+[ carriage split-by
+  map
+  [ char | split-by
+    1 peek trim
+    nest$ ] ]               is parse-input ( input -- finals )
+
+[ 0 swap witheach
+  [ witheach
+    [ size
+      dup 2 = swap
+      dup 4 = swap
+      dup 3 = swap
+      7 = or or or + ] ] ]  is count-1478 ( finals -- n )
+
+[ parse-input
+  count-1478 ]              is solve-puzzle ( input -- n )

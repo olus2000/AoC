@@ -1,0 +1,35 @@
+                              nest$ is parse-input ( input -- lines )
+
+[ lut
+  [ char ) char ] char } char > ]
+  [ char ( ( ') )
+    char [ char { char < ] ]        is match ( x -- x ? )
+
+[ lut
+  [ char ( ( ') )
+    char [ char { char < ]
+  [ 1 2 3 4 ] ]                     is points ( x -- n true | x false )
+
+[ [] swap witheach
+  [ match iff
+    [ over take
+      = not if
+      [ drop []
+        conclude ] ] else
+    [ over put ] ]
+  0 swap
+  [ dup size 0 > while
+    swap 5 *
+    over take
+    points drop +
+    swap again ]
+  drop ]                            is calculate-score ( line -- n )
+
+[ sort dup size 2 / peek ]          is median ( [ -- n )
+
+[ parse-input
+  [] swap witheach
+  [ calculate-score
+    dup iff join
+    else drop ]
+  median ]                          is solve-puzzle ( input -- n )

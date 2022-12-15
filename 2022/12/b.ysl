@@ -1,0 +1,177 @@
+var map = ""
+var visited = ""
+var queue-x = ""
+var queue-y = ""
+var score = 0
+
+
+var y = 0
+input:
+    var row = ""
+    var vis-row = ""
+    var x = 0
+    getch
+    var i f return
+    lt $i &A
+    goto_if *main
+    .row-loop:
+        var v = &0
+        cmp $i &S
+        gosub_if *.start
+        cmp $i &E
+        gosub_if *.end
+        var x + 1
+        var row a $i
+        var vis-row a $v
+        getch
+        var i f return
+        gt $i 10
+        goto_if *.row-loop
+    string_array a map !row
+    string_array a visited !vis-row
+    var y + 1
+    goto *input
+
+    .end:
+        var i = &z
+        var queue-x = $x
+        var queue-y = $y
+        var v = &1
+        return
+
+    .start:
+        var i = &a
+        return
+
+
+main:
+    string_array l map
+    var height f return
+    var height - 1
+    string_array g map 0
+    var i c return
+    size i
+    var width f return
+    var width - 1
+    .loop:
+        var next-queue-x = ""
+        var next-queue-y = ""
+        var score + 1
+        gosub *step
+        var queue-x c next-queue-x
+        var queue-y c next-queue-y
+        goto *.loop
+
+
+step:
+    size queue-x
+    var i f return
+    .loop:
+        var i - 1
+        var x f queue-x $i
+        var y f queue-y $i
+        gosub *get-height
+        var oh = $h
+        var x - 1
+        gosub *visit
+        var x + 2
+        gosub *visit
+        var x - 1
+        var y - 1
+        gosub *visit
+        var y + 2
+        gosub *visit
+        gt $i 0
+        goto_if *.loop
+    return
+
+
+visit:
+    gosub *oob?
+    goto_if *.return
+    gosub *visited?
+    goto_if *.return
+    gosub *too-high?
+    goto_if *.return
+    gosub *end?
+    goto_if *exit
+    var next-queue-x a $x
+    var next-queue-y a $y
+    gosub *set-visited
+    .return:
+    return
+
+
+end?:
+    gosub *get-height
+    cmp $h &a
+    goto_if *.yes
+    return 0
+    .yes:
+    return 1
+
+
+oob?:
+    lt $x 0
+    goto_if *.yes
+    lt $y 0
+    goto_if *.yes
+    gt $x $width
+    goto_if *.yes
+    gt $y $height
+    goto_if *.yes
+    return 0
+    .yes:
+    return 1
+
+
+visited?:
+    string_array g visited $y
+    var row c return
+    var f f row $x
+    var f - &0
+    return $f
+
+
+set-visited:
+    string_array g visited $y
+    var row c return
+    var row s $x &1
+    string_array s visited $y !row
+    return
+
+
+too-high?:
+    gosub *get-height
+    var h + 1
+    lt $h $oh
+    goto_if *.yes
+    return 0
+    .yes:
+    return 1
+
+
+get-height:
+    string_array g map $y
+    var row c return
+    var h f row $x
+    return $h
+
+
+exit:
+    println $score
+    exit
+
+
+print-visited:
+    string_array l visited
+    var j f return
+    .loop:
+        var j - 1
+        string_array g visited $j
+        var row c return
+        println !row
+        gt $j 0
+        goto_if *.loop
+    println ""
+    return

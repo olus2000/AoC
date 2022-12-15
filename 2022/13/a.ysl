@@ -1,0 +1,203 @@
+var score = 0
+var id = 1
+var [ = 0
+var [ - 1
+var ] = 0
+var ] - 2
+
+
+main:
+    getch
+    var a f return
+    lt $a 11
+    goto_if *exit
+    var second = ""
+    gosub *read-packet
+    var first c return
+    getch
+    gosub *read-packet
+    var fp = 1
+    var sp = 1
+    gosub *compare-packets
+    gosub_if *increase-score
+    var id + 1
+    getch
+    goto *main
+exit:
+    println $score
+    exit
+
+
+read-packet:
+    println "Reading a packet"
+    println *.end-check
+    var second a $[
+    println *.end-check
+    goto *.loop
+ 
+    .found-number:
+        println "Found number!"
+        println *.found-number
+        println "test"
+        var second a $i
+        println "Saved number"
+        println $i
+        println $j
+        println !a
+        println *.end-check
+        goto *.end-check
+ 
+    .loop:
+        println "loop"
+        println *.found-number
+        gosub *read-num
+        goto_if *.found-number
+        println "Not found number"
+        println *.end-check
+        cmp $a &[
+        gosub_if *read-packet
+        goto *.end-check
+ 
+    .end-check:
+        println "Doing the end check"
+        println *.end-check
+        cmp $a &]
+        goto_if *.packet-end
+        goto *.loop
+ 
+    .packet-end:
+        var second a $]
+        getch
+        var a f return
+        return $second
+
+
+compare-packets:
+    var fp + 1
+    var sp + 1
+    var f f first $fp
+    lt $f 0
+    goto_if *.not-number
+        gosub *compare-number-packet
+        var i f return
+        lt $i 0
+        goto_if *compare-packets
+        return $i
+    .not-number:
+    cmp $s $]
+    goto_if *.close
+        var s f second $s
+        lt $s 0
+        goto_if *.open-not-number
+            gosub *compare-packet-number
+            var i f return
+            lt $i 0
+            goto_if *compare-packets
+            return $i
+        .open-not-number:
+        cmp $s $]
+        goto_if *.no
+        gosub *compare-packets
+        var i f return
+        lt $i 0
+        goto_if *compare-packets
+        return $i
+    .close:
+    var s f second $s
+    gt $s $]
+    goto_if *.no
+    return $[
+ 
+    .no:
+        return 0
+ 
+    .yes:
+        return 1
+
+
+compare-packet-number:
+    var d = 0
+    var fp - 1
+    .opens:
+        var d + 1
+        var fp + 1
+        var f f first $fp
+        cmp $f $[
+        goto-if *.opens
+    lt $f $s
+    goto_if *.yes
+    gt $f $s
+    goto_if *.no
+    .closes:
+        var d - 1
+        cmp $d 0
+        goto_if *.maybe
+        var fp + 1
+        var f f first $fp
+        cmp $f $]
+        goto_if *.closes
+ 
+    .no:
+        return 0
+ 
+    .yes:
+        return 1
+ 
+    .maybe:
+        return $[
+
+
+compare-number-packet:
+    var d = 0
+    var sp - 1
+    .opens:
+        var d + 1
+        var sp + 1
+        var s f second $sp
+        cmp $s $[
+        goto-if *.opens
+    lt $f $s
+    goto_if *.yes
+    gt $f $s
+    goto_if *.no
+    .closes:
+        var d - 1
+        cmp $d 0
+        goto_if *.maybe
+        var sp + 1
+        var s f second $sp
+        cmp $s $]
+        goto_if *.closes
+ 
+    .no:
+        return 0
+ 
+    .yes:
+        return 1
+ 
+    .maybe:
+        return $[
+
+
+increase-score:
+    var score + $id
+    return
+
+
+read-num:
+    var j = 0
+    var i = 0
+    .loop:
+        getch
+        var a f return
+        lt $a &0
+        goto_if *.end
+        gt $a &9
+        goto_if *.end
+        var j = 1
+        var i * 10
+        var i + $a
+        var i - 48
+        goto *.loop
+    .end:
+    return $j

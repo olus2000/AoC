@@ -1,0 +1,63 @@
+var x = 1
+var cycle = 0
+var check = 20
+var score = 0
+
+
+main:
+    gosub *step
+    getch
+    var c f return
+    getch
+    getch
+    getch
+    getch
+    cmp $c &n
+    goto_if *main
+    gosub *step
+    gosub *read-num
+    goto_if *nonnegative
+    gosub *read-num
+    var j = $i
+    var i = 0
+    var i - $j
+nonnegative:
+    var x + $i
+    goto *main
+
+
+read-num:
+    var j = 0
+    var i = 0
+read-num-loop:
+    getch
+    var a f return
+    lt $a &0
+    goto_if *read-num-end
+    gt $a &9
+    goto_if *read-num-end
+    var j = 1
+    var i * 10
+    var i + $a
+    var i - 48
+    goto *read-num-loop
+read-num-end:
+    return $j
+
+
+step:
+    var cycle + 1
+    lt $cycle $check
+    goto_if *return
+    var i = $cycle
+    var i * $x
+    var score + $i
+    println $i
+    lt $cycle 220
+    goto_if *step-no-exit
+    println $score
+    exit
+step-no-exit:
+    var check + 40
+return:
+    return

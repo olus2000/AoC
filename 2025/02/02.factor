@@ -1,9 +1,10 @@
 ! Copyright (C) 2025 Aleksander "olus2000" Sabak.
 ! See https://factorcode.org/license.txt for BSD license.
 USING: grouping io.encodings.utf8 io.files kernel literals math
-math.parser math.primes.factors ranges sequences
+math.parser math.primes.factors prettyprint ranges sequences
 sequences.extras splitting ;
 IN: AoC.2025.02
+
 
 CONSTANT: input
   $[ "vocab:AoC/2025/02/02.in" utf8 file-lines ]

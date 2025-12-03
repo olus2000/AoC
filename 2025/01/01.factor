@@ -6,11 +6,10 @@ IN: AoC.2025.01
 
 
 CONSTANT: input
-  $[ "vocab:AoC/2025/01/01.in" utf8 file-contents ]
+  $[ "vocab:AoC/2025/01/01.in" utf8 file-lines ]
 
 
-: parse ( input -- numbers )
-  split-lines
+: parse ( lines -- numbers )
   [ unclip [ string>number ] dip CHAR: L = [ neg ] when ] map ;
 
 
@@ -18,11 +17,11 @@ CONSTANT: input
   50 [ + 100 mod ] accumulate* [ 0 = ] count ;
 
 
-: part-1 ( -- n ) input parse count-zero-stops ;
+: part-1 ( input -- n ) parse count-zero-stops ;
 
 
 : explode ( n -- ns ) [ abs ] [ sgn ] bi <array> ;
 
 
-: part-2 ( -- n )
-  input parse [ explode ] map-concat count-zero-stops ;
+: part-2 ( input -- n )
+  parse [ explode ] map-concat count-zero-stops ;

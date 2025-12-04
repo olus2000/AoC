@@ -7,7 +7,7 @@ IN: AoC
 
 <PRIVATE
 
-CONSTANT: root $[ "vocab:AoC" normalize-path parent-directory ]
+CONSTANT: root $[ "AoC" vocab-path parent-directory ]
 
 CONSTANT: path-format
   $[ "vocab:AoC" "%04d" "%02d" 3append-path ]

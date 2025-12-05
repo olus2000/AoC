@@ -34,7 +34,9 @@ CONSTANT: input
   parse ;
 ]]
 
-INITIALIZED-SYMBOL: AoC-session [ "" ]
+INITIALIZED-SYMBOL: AoC-session
+  [ "vocab:AoC/.session" [ file-exists? ]
+    [ utf8 file-contents ] [ "" ] 1if ]
 
 : scaffold-AoC-vocab ( day -- )
   [ year>> ] [ day>> ] bi vocab-format sprintf
@@ -51,8 +53,9 @@ INITIALIZED-SYMBOL: AoC-session [ "" ]
   put-cookie http-request nip ;
 
 : correct-session ( -- )
-  "Enter new session cookie:" print
-  readln AoC-session set-global ;
+  "Enter new session cookie:" print readln
+  [ AoC-session set-global ]
+  [ "vocab:AoC/.session" utf8 set-file-contents ] bi ;
 
 : get-AoC-input ( url -- input )
   [ (get-AoC-input) ]
@@ -62,10 +65,6 @@ INITIALIZED-SYMBOL: AoC-session [ "" ]
 
 : path>input-file ( path -- path' )
   dup file-name ".in" append append-path ;
-
-: scaffold-AoC-input ( day -- )
-  [ day>AoC-url get-AoC-input ] [ day>AoC-path path>input-file ]
-  bi utf8 set-file-contents ;
 
 : path>main-file ( path -- path' )
   dup file-name ".factor" append append-path ;
@@ -79,6 +78,9 @@ INITIALIZED-SYMBOL: AoC-session [ "" ]
 
 PRIVATE>
 
+: scaffold-AoC-input ( day -- )
+  [ day>AoC-url get-AoC-input ] [ day>AoC-path path>input-file ]
+  bi utf8 set-file-contents ;
 
 : scaffold-AoC ( day -- )
   [ scaffold-AoC-vocab ] [ default-AoC-main ]

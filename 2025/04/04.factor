@@ -1,9 +1,8 @@
 ! Copyright (C) 2025 Your name.
 ! See https://factorcode.org/license.txt for BSD license.
-USING: ;
+USING: arrays assocs hash-sets io io.encodings.utf8 io.files
+kernel literals math ranges sequences sets strings ;
 IN: AoC.2025.04
-
-auto-use
 
 
 CONSTANT: input

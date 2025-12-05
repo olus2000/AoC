@@ -4,8 +4,6 @@ USING: arrays io.encodings.utf8 io.files kernel literals make
 math math.order math.parser sequences sets sorting splitting ;
 IN: AoC.2025.05
 
-auto-use
-
 
 CONSTANT: input
   $[ "vocab:AoC/2025/05/05.in" utf8 file-lines ]

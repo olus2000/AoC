@@ -36,7 +36,7 @@ CONSTANT: input
 
 INITIALIZED-SYMBOL: AoC-session
   [ "vocab:AoC/.session" [ file-exists? ]
-    [ utf8 file-contents ] [ "" ] 1if ]
+    [ utf8 file-contents ] [ drop "" ] 1if ]
 
 : scaffold-AoC-vocab ( day -- )
   [ year>> ] [ day>> ] bi vocab-format sprintf
